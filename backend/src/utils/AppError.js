@@ -1,0 +1,14 @@
+class AppError extends Error {
+    constructor(message,statusCode=500,errorName='InternalServerError',errorCode = 'INTERNAL_ERROR'){
+        super(message);
+
+        this.statusCode=statusCode;
+        this.errorName=errorName;
+        this.errorCode = errorCode;
+        this.isOperational=true;
+
+        Error.captureStackTrace(this, this.constructor);
+    }
+}
+
+module.exports=AppError;

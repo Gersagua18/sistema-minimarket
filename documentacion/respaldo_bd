@@ -1,0 +1,1577 @@
+--
+-- PostgreSQL database dump
+--
+
+\restrict K0l4WcRJG6hnD3Tr09uc7N5OI23YneeocGCf2W0MCau1Yn9ogJwSvqKRhvqoFoC
+
+-- Dumped from database version 18.4
+-- Dumped by pg_dump version 18.4
+
+-- Started on 2026-06-30 21:22:22
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 242 (class 1259 OID 33529)
+-- Name: alertas_stock; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.alertas_stock (
+    id_alerta integer NOT NULL,
+    id_producto integer NOT NULL,
+    stock_actual integer NOT NULL,
+    stock_minimo integer NOT NULL,
+    mensaje character varying(200) NOT NULL,
+    fecha_generacion timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    leida boolean DEFAULT false NOT NULL,
+    estado character varying(20) DEFAULT 'Pendiente'::character varying NOT NULL,
+    CONSTRAINT chk_estado_alerta CHECK (((estado)::text = ANY ((ARRAY['Pendiente'::character varying, 'Revisada'::character varying, 'Resuelta'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.alertas_stock OWNER TO postgres;
+
+--
+-- TOC entry 241 (class 1259 OID 33528)
+-- Name: alertas_stock_id_alerta_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.alertas_stock_id_alerta_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.alertas_stock_id_alerta_seq OWNER TO postgres;
+
+--
+-- TOC entry 5246 (class 0 OID 0)
+-- Dependencies: 241
+-- Name: alertas_stock_id_alerta_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.alertas_stock_id_alerta_seq OWNED BY public.alertas_stock.id_alerta;
+
+
+--
+-- TOC entry 226 (class 1259 OID 33333)
+-- Name: anaqueles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.anaqueles (
+    id_anaquel integer NOT NULL,
+    codigo character varying(30) NOT NULL,
+    nombre character varying(80) NOT NULL,
+    ubicacion character varying(120),
+    descripcion character varying(150),
+    estado boolean DEFAULT true NOT NULL,
+    fecha_creacion timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+ALTER TABLE public.anaqueles OWNER TO postgres;
+
+--
+-- TOC entry 225 (class 1259 OID 33332)
+-- Name: anaqueles_id_anaquel_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.anaqueles_id_anaquel_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.anaqueles_id_anaquel_seq OWNER TO postgres;
+
+--
+-- TOC entry 5247 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: anaqueles_id_anaquel_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.anaqueles_id_anaquel_seq OWNED BY public.anaqueles.id_anaquel;
+
+
+--
+-- TOC entry 240 (class 1259 OID 33503)
+-- Name: boletas; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.boletas (
+    id_boleta integer NOT NULL,
+    id_venta integer NOT NULL,
+    numero character varying(30) NOT NULL,
+    fecha_emision timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    total numeric(10,2) NOT NULL,
+    impuesto numeric(10,2) DEFAULT 0 NOT NULL,
+    CONSTRAINT chk_impuesto_boleta CHECK ((impuesto >= (0)::numeric)),
+    CONSTRAINT chk_total_boleta CHECK ((total >= (0)::numeric))
+);
+
+
+ALTER TABLE public.boletas OWNER TO postgres;
+
+--
+-- TOC entry 239 (class 1259 OID 33502)
+-- Name: boletas_id_boleta_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.boletas_id_boleta_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.boletas_id_boleta_seq OWNER TO postgres;
+
+--
+-- TOC entry 5248 (class 0 OID 0)
+-- Dependencies: 239
+-- Name: boletas_id_boleta_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.boletas_id_boleta_seq OWNED BY public.boletas.id_boleta;
+
+
+--
+-- TOC entry 224 (class 1259 OID 33318)
+-- Name: categorias; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.categorias (
+    id_categoria integer NOT NULL,
+    nombre character varying(80) NOT NULL,
+    descripcion character varying(150),
+    estado boolean DEFAULT true NOT NULL,
+    fecha_creacion timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+ALTER TABLE public.categorias OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 33317)
+-- Name: categorias_id_categoria_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.categorias_id_categoria_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.categorias_id_categoria_seq OWNER TO postgres;
+
+--
+-- TOC entry 5249 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: categorias_id_categoria_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.categorias_id_categoria_seq OWNED BY public.categorias.id_categoria;
+
+
+--
+-- TOC entry 238 (class 1259 OID 33477)
+-- Name: detalle_ventas; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.detalle_ventas (
+    id_detalle integer NOT NULL,
+    id_venta integer NOT NULL,
+    id_producto integer NOT NULL,
+    cantidad integer NOT NULL,
+    precio_unitario numeric(10,2) NOT NULL,
+    subtotal numeric(10,2) NOT NULL,
+    CONSTRAINT chk_cantidad_detalle CHECK ((cantidad > 0)),
+    CONSTRAINT chk_precio_unitario CHECK ((precio_unitario >= (0)::numeric)),
+    CONSTRAINT chk_subtotal CHECK ((subtotal >= (0)::numeric))
+);
+
+
+ALTER TABLE public.detalle_ventas OWNER TO postgres;
+
+--
+-- TOC entry 237 (class 1259 OID 33476)
+-- Name: detalle_ventas_id_detalle_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.detalle_ventas_id_detalle_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.detalle_ventas_id_detalle_seq OWNER TO postgres;
+
+--
+-- TOC entry 5250 (class 0 OID 0)
+-- Dependencies: 237
+-- Name: detalle_ventas_id_detalle_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.detalle_ventas_id_detalle_seq OWNED BY public.detalle_ventas.id_detalle;
+
+
+--
+-- TOC entry 230 (class 1259 OID 33378)
+-- Name: imagenes_productos; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.imagenes_productos (
+    id_imagen integer NOT NULL,
+    id_producto integer NOT NULL,
+    url character varying(255) NOT NULL,
+    descripcion character varying(150),
+    principal boolean DEFAULT false NOT NULL,
+    fecha_creacion timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+ALTER TABLE public.imagenes_productos OWNER TO postgres;
+
+--
+-- TOC entry 229 (class 1259 OID 33377)
+-- Name: imagenes_productos_id_imagen_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.imagenes_productos_id_imagen_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.imagenes_productos_id_imagen_seq OWNER TO postgres;
+
+--
+-- TOC entry 5251 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: imagenes_productos_id_imagen_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.imagenes_productos_id_imagen_seq OWNED BY public.imagenes_productos.id_imagen;
+
+
+--
+-- TOC entry 232 (class 1259 OID 33397)
+-- Name: inventario; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.inventario (
+    id_inventario integer NOT NULL,
+    id_producto integer NOT NULL,
+    stock_actual integer DEFAULT 0 NOT NULL,
+    stock_minimo integer DEFAULT 5 NOT NULL,
+    fecha_actualizacion timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT chk_stock_actual CHECK ((stock_actual >= 0)),
+    CONSTRAINT chk_stock_minimo CHECK ((stock_minimo >= 0))
+);
+
+
+ALTER TABLE public.inventario OWNER TO postgres;
+
+--
+-- TOC entry 231 (class 1259 OID 33396)
+-- Name: inventario_id_inventario_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.inventario_id_inventario_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.inventario_id_inventario_seq OWNER TO postgres;
+
+--
+-- TOC entry 5252 (class 0 OID 0)
+-- Dependencies: 231
+-- Name: inventario_id_inventario_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.inventario_id_inventario_seq OWNED BY public.inventario.id_inventario;
+
+
+--
+-- TOC entry 234 (class 1259 OID 33421)
+-- Name: movimientos_inventario; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.movimientos_inventario (
+    id_movimiento integer NOT NULL,
+    id_producto integer NOT NULL,
+    id_usuario integer NOT NULL,
+    tipo_movimiento character varying(20) NOT NULL,
+    cantidad integer NOT NULL,
+    observacion character varying(200),
+    fecha timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT chk_cantidad_movimiento CHECK ((cantidad > 0)),
+    CONSTRAINT chk_tipo_movimiento CHECK (((tipo_movimiento)::text = ANY ((ARRAY['Entrada'::character varying, 'Salida'::character varying, 'Ajuste'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.movimientos_inventario OWNER TO postgres;
+
+--
+-- TOC entry 233 (class 1259 OID 33420)
+-- Name: movimientos_inventario_id_movimiento_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.movimientos_inventario_id_movimiento_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.movimientos_inventario_id_movimiento_seq OWNER TO postgres;
+
+--
+-- TOC entry 5253 (class 0 OID 0)
+-- Dependencies: 233
+-- Name: movimientos_inventario_id_movimiento_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.movimientos_inventario_id_movimiento_seq OWNED BY public.movimientos_inventario.id_movimiento;
+
+
+--
+-- TOC entry 228 (class 1259 OID 33349)
+-- Name: productos; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.productos (
+    id_producto integer NOT NULL,
+    id_categoria integer NOT NULL,
+    id_anaquel integer,
+    codigo character varying(50) NOT NULL,
+    nombre character varying(100) NOT NULL,
+    descripcion character varying(200),
+    precio numeric(10,2) NOT NULL,
+    estado boolean DEFAULT true NOT NULL,
+    fecha_creacion timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT chk_precio_producto CHECK ((precio >= (0)::numeric))
+);
+
+
+ALTER TABLE public.productos OWNER TO postgres;
+
+--
+-- TOC entry 227 (class 1259 OID 33348)
+-- Name: productos_id_producto_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.productos_id_producto_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.productos_id_producto_seq OWNER TO postgres;
+
+--
+-- TOC entry 5254 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: productos_id_producto_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.productos_id_producto_seq OWNED BY public.productos.id_producto;
+
+
+--
+-- TOC entry 244 (class 1259 OID 33553)
+-- Name: reportes_inventario; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.reportes_inventario (
+    id_reporte integer NOT NULL,
+    generado_por integer NOT NULL,
+    tipo character varying(50) NOT NULL,
+    fecha_inicio date,
+    fecha_fin date,
+    fecha_generacion timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    archivo_url character varying(255),
+    CONSTRAINT chk_tipo_reporte CHECK (((tipo)::text = ANY ((ARRAY['Ventas'::character varying, 'Inventario'::character varying, 'Stock bajo'::character varying, 'Productos más vendidos'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.reportes_inventario OWNER TO postgres;
+
+--
+-- TOC entry 243 (class 1259 OID 33552)
+-- Name: reportes_inventario_id_reporte_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.reportes_inventario_id_reporte_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.reportes_inventario_id_reporte_seq OWNER TO postgres;
+
+--
+-- TOC entry 5255 (class 0 OID 0)
+-- Dependencies: 243
+-- Name: reportes_inventario_id_reporte_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.reportes_inventario_id_reporte_seq OWNED BY public.reportes_inventario.id_reporte;
+
+
+--
+-- TOC entry 220 (class 1259 OID 33256)
+-- Name: roles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.roles (
+    id_rol integer NOT NULL,
+    nombre character varying(50) NOT NULL,
+    descripcion character varying(150),
+    estado boolean DEFAULT true NOT NULL,
+    fecha_creacion timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+ALTER TABLE public.roles OWNER TO postgres;
+
+--
+-- TOC entry 219 (class 1259 OID 33255)
+-- Name: roles_id_rol_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.roles_id_rol_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.roles_id_rol_seq OWNER TO postgres;
+
+--
+-- TOC entry 5256 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: roles_id_rol_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.roles_id_rol_seq OWNED BY public.roles.id_rol;
+
+
+--
+-- TOC entry 248 (class 1259 OID 41477)
+-- Name: sesiones_usuario; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.sesiones_usuario (
+    id bigint NOT NULL,
+    id_usuario bigint NOT NULL,
+    access_token text NOT NULL,
+    refresh_token text,
+    ip_address character varying(45),
+    user_agent text,
+    dispositivo character varying(200),
+    fecha_inicio timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    fecha_expiracion timestamp without time zone NOT NULL,
+    ultima_actividad timestamp without time zone,
+    activo boolean DEFAULT true,
+    cerrado_manualmente boolean DEFAULT false,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.sesiones_usuario OWNER TO postgres;
+
+--
+-- TOC entry 247 (class 1259 OID 41476)
+-- Name: sesiones_usuario_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.sesiones_usuario_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.sesiones_usuario_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 5257 (class 0 OID 0)
+-- Dependencies: 247
+-- Name: sesiones_usuario_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.sesiones_usuario_id_seq OWNED BY public.sesiones_usuario.id;
+
+
+--
+-- TOC entry 222 (class 1259 OID 33271)
+-- Name: usuarios; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.usuarios (
+    id_usuario bigint NOT NULL,
+    id_rol bigint NOT NULL,
+    nombre character varying(100) NOT NULL,
+    apellido character varying(100) NOT NULL,
+    telefono character varying(30),
+    email character varying(150) NOT NULL,
+    password_hash text NOT NULL,
+    activo boolean DEFAULT true,
+    token_reset text,
+    token_reset_exp timestamp without time zone,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone,
+    ultimo_login timestamp without time zone,
+    avatar_url text
+);
+
+
+ALTER TABLE public.usuarios OWNER TO postgres;
+
+--
+-- TOC entry 221 (class 1259 OID 33270)
+-- Name: usuarios_id_usuario_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.usuarios_id_usuario_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.usuarios_id_usuario_seq OWNER TO postgres;
+
+--
+-- TOC entry 5258 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: usuarios_id_usuario_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.usuarios_id_usuario_seq OWNED BY public.usuarios.id_usuario;
+
+
+--
+-- TOC entry 236 (class 1259 OID 33447)
+-- Name: ventas; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.ventas (
+    id_venta integer NOT NULL,
+    id_cliente integer,
+    id_trabajador integer NOT NULL,
+    fecha timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    total numeric(10,2) DEFAULT 0 NOT NULL,
+    metodo_pago character varying(30) DEFAULT 'Efectivo'::character varying NOT NULL,
+    estado character varying(30) DEFAULT 'Registrada'::character varying NOT NULL,
+    CONSTRAINT chk_estado_venta CHECK (((estado)::text = ANY ((ARRAY['Registrada'::character varying, 'Anulada'::character varying])::text[]))),
+    CONSTRAINT chk_metodo_pago CHECK (((metodo_pago)::text = ANY ((ARRAY['Efectivo'::character varying, 'Tarjeta'::character varying, 'Yape'::character varying, 'Plin'::character varying, 'Transferencia'::character varying])::text[]))),
+    CONSTRAINT chk_total_venta CHECK ((total >= (0)::numeric))
+);
+
+
+ALTER TABLE public.ventas OWNER TO postgres;
+
+--
+-- TOC entry 235 (class 1259 OID 33446)
+-- Name: ventas_id_venta_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.ventas_id_venta_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.ventas_id_venta_seq OWNER TO postgres;
+
+--
+-- TOC entry 5259 (class 0 OID 0)
+-- Dependencies: 235
+-- Name: ventas_id_venta_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.ventas_id_venta_seq OWNED BY public.ventas.id_venta;
+
+
+--
+-- TOC entry 245 (class 1259 OID 33590)
+-- Name: vista_productos_stock; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.vista_productos_stock AS
+ SELECT p.id_producto,
+    p.codigo,
+    p.nombre,
+    p.descripcion,
+    p.precio,
+    c.nombre AS categoria,
+    a.codigo AS codigo_anaquel,
+    a.nombre AS anaquel,
+    a.ubicacion,
+    i.stock_actual,
+    i.stock_minimo,
+        CASE
+            WHEN (i.stock_actual <= i.stock_minimo) THEN 'Stock bajo'::text
+            ELSE 'Stock disponible'::text
+        END AS estado_stock
+   FROM (((public.productos p
+     JOIN public.categorias c ON ((p.id_categoria = c.id_categoria)))
+     LEFT JOIN public.anaqueles a ON ((p.id_anaquel = a.id_anaquel)))
+     LEFT JOIN public.inventario i ON ((p.id_producto = i.id_producto)))
+  WHERE (p.estado = true);
+
+
+ALTER VIEW public.vista_productos_stock OWNER TO postgres;
+
+--
+-- TOC entry 246 (class 1259 OID 41471)
+-- Name: vista_ventas_detalle; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.vista_ventas_detalle AS
+ SELECT v.id_venta,
+    v.fecha,
+    v.total,
+    v.metodo_pago,
+    v.estado,
+    (((u.nombre)::text || ' '::text) || (COALESCE(u.apellido, ''::character varying))::text) AS trabajador,
+    p.nombre AS producto,
+    dv.cantidad,
+    dv.precio_unitario,
+    dv.subtotal
+   FROM (((public.ventas v
+     JOIN public.usuarios u ON ((v.id_trabajador = u.id_usuario)))
+     JOIN public.detalle_ventas dv ON ((v.id_venta = dv.id_venta)))
+     JOIN public.productos p ON ((dv.id_producto = p.id_producto)));
+
+
+ALTER VIEW public.vista_ventas_detalle OWNER TO postgres;
+
+--
+-- TOC entry 4962 (class 2604 OID 33532)
+-- Name: alertas_stock id_alerta; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.alertas_stock ALTER COLUMN id_alerta SET DEFAULT nextval('public.alertas_stock_id_alerta_seq'::regclass);
+
+
+--
+-- TOC entry 4938 (class 2604 OID 33336)
+-- Name: anaqueles id_anaquel; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.anaqueles ALTER COLUMN id_anaquel SET DEFAULT nextval('public.anaqueles_id_anaquel_seq'::regclass);
+
+
+--
+-- TOC entry 4959 (class 2604 OID 33506)
+-- Name: boletas id_boleta; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.boletas ALTER COLUMN id_boleta SET DEFAULT nextval('public.boletas_id_boleta_seq'::regclass);
+
+
+--
+-- TOC entry 4935 (class 2604 OID 33321)
+-- Name: categorias id_categoria; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.categorias ALTER COLUMN id_categoria SET DEFAULT nextval('public.categorias_id_categoria_seq'::regclass);
+
+
+--
+-- TOC entry 4958 (class 2604 OID 33480)
+-- Name: detalle_ventas id_detalle; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.detalle_ventas ALTER COLUMN id_detalle SET DEFAULT nextval('public.detalle_ventas_id_detalle_seq'::regclass);
+
+
+--
+-- TOC entry 4944 (class 2604 OID 33381)
+-- Name: imagenes_productos id_imagen; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.imagenes_productos ALTER COLUMN id_imagen SET DEFAULT nextval('public.imagenes_productos_id_imagen_seq'::regclass);
+
+
+--
+-- TOC entry 4947 (class 2604 OID 33400)
+-- Name: inventario id_inventario; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.inventario ALTER COLUMN id_inventario SET DEFAULT nextval('public.inventario_id_inventario_seq'::regclass);
+
+
+--
+-- TOC entry 4951 (class 2604 OID 33424)
+-- Name: movimientos_inventario id_movimiento; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.movimientos_inventario ALTER COLUMN id_movimiento SET DEFAULT nextval('public.movimientos_inventario_id_movimiento_seq'::regclass);
+
+
+--
+-- TOC entry 4941 (class 2604 OID 33352)
+-- Name: productos id_producto; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.productos ALTER COLUMN id_producto SET DEFAULT nextval('public.productos_id_producto_seq'::regclass);
+
+
+--
+-- TOC entry 4966 (class 2604 OID 33556)
+-- Name: reportes_inventario id_reporte; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.reportes_inventario ALTER COLUMN id_reporte SET DEFAULT nextval('public.reportes_inventario_id_reporte_seq'::regclass);
+
+
+--
+-- TOC entry 4929 (class 2604 OID 33259)
+-- Name: roles id_rol; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.roles ALTER COLUMN id_rol SET DEFAULT nextval('public.roles_id_rol_seq'::regclass);
+
+
+--
+-- TOC entry 4968 (class 2604 OID 41480)
+-- Name: sesiones_usuario id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.sesiones_usuario ALTER COLUMN id SET DEFAULT nextval('public.sesiones_usuario_id_seq'::regclass);
+
+
+--
+-- TOC entry 4932 (class 2604 OID 41411)
+-- Name: usuarios id_usuario; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usuarios ALTER COLUMN id_usuario SET DEFAULT nextval('public.usuarios_id_usuario_seq'::regclass);
+
+
+--
+-- TOC entry 4953 (class 2604 OID 33450)
+-- Name: ventas id_venta; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ventas ALTER COLUMN id_venta SET DEFAULT nextval('public.ventas_id_venta_seq'::regclass);
+
+
+--
+-- TOC entry 5236 (class 0 OID 33529)
+-- Dependencies: 242
+-- Data for Name: alertas_stock; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.alertas_stock (id_alerta, id_producto, stock_actual, stock_minimo, mensaje, fecha_generacion, leida, estado) FROM stdin;
+\.
+
+
+--
+-- TOC entry 5220 (class 0 OID 33333)
+-- Dependencies: 226
+-- Data for Name: anaqueles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.anaqueles (id_anaquel, codigo, nombre, ubicacion, descripcion, estado, fecha_creacion) FROM stdin;
+1	A-01	Anaquel Bebidas	Pasillo 1	Anaquel destinado a bebidas	t	2026-06-28 00:57:40.196823
+2	A-02	Anaquel Abarrotes	Pasillo 2	Anaquel destinado a productos de abarrotes	t	2026-06-28 00:57:40.196823
+3	A-03	Anaquel Limpieza	Pasillo 3	Anaquel destinado a productos de limpieza	t	2026-06-28 00:57:40.196823
+\.
+
+
+--
+-- TOC entry 5234 (class 0 OID 33503)
+-- Dependencies: 240
+-- Data for Name: boletas; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.boletas (id_boleta, id_venta, numero, fecha_emision, total, impuesto) FROM stdin;
+\.
+
+
+--
+-- TOC entry 5218 (class 0 OID 33318)
+-- Dependencies: 224
+-- Data for Name: categorias; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.categorias (id_categoria, nombre, descripcion, estado, fecha_creacion) FROM stdin;
+1	Bebidas	Productos líquidos como gaseosas, agua y jugos	t	2026-06-28 00:57:40.196823
+2	Abarrotes	Productos básicos de consumo diario	t	2026-06-28 00:57:40.196823
+3	Limpieza	Productos de limpieza del hogar	t	2026-06-28 00:57:40.196823
+4	Snacks	Galletas, piqueos y productos similares	t	2026-06-28 00:57:40.196823
+\.
+
+
+--
+-- TOC entry 5232 (class 0 OID 33477)
+-- Dependencies: 238
+-- Data for Name: detalle_ventas; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.detalle_ventas (id_detalle, id_venta, id_producto, cantidad, precio_unitario, subtotal) FROM stdin;
+\.
+
+
+--
+-- TOC entry 5224 (class 0 OID 33378)
+-- Dependencies: 230
+-- Data for Name: imagenes_productos; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.imagenes_productos (id_imagen, id_producto, url, descripcion, principal, fecha_creacion) FROM stdin;
+\.
+
+
+--
+-- TOC entry 5226 (class 0 OID 33397)
+-- Dependencies: 232
+-- Data for Name: inventario; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.inventario (id_inventario, id_producto, stock_actual, stock_minimo, fecha_actualizacion) FROM stdin;
+1	1	30	5	2026-06-28 00:57:40.196823
+2	2	20	5	2026-06-28 00:57:40.196823
+3	3	15	4	2026-06-28 00:57:40.196823
+4	4	8	3	2026-06-28 00:57:40.196823
+\.
+
+
+--
+-- TOC entry 5228 (class 0 OID 33421)
+-- Dependencies: 234
+-- Data for Name: movimientos_inventario; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.movimientos_inventario (id_movimiento, id_producto, id_usuario, tipo_movimiento, cantidad, observacion, fecha) FROM stdin;
+\.
+
+
+--
+-- TOC entry 5222 (class 0 OID 33349)
+-- Dependencies: 228
+-- Data for Name: productos; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.productos (id_producto, id_categoria, id_anaquel, codigo, nombre, descripcion, precio, estado, fecha_creacion) FROM stdin;
+1	1	1	PROD-001	Agua mineral 625ml	Botella de agua mineral personal	2.50	t	2026-06-28 00:57:40.196823
+2	1	1	PROD-002	Gaseosa 500ml	Gaseosa personal	3.00	t	2026-06-28 00:57:40.196823
+3	2	2	PROD-003	Arroz 1kg	Bolsa de arroz de 1 kilogramo	4.50	t	2026-06-28 00:57:40.196823
+4	4	1	PROD-004	Galleta vainilla	Paquete de galletas sabor vainilla	1.50	t	2026-06-28 00:57:40.196823
+\.
+
+
+--
+-- TOC entry 5238 (class 0 OID 33553)
+-- Dependencies: 244
+-- Data for Name: reportes_inventario; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.reportes_inventario (id_reporte, generado_por, tipo, fecha_inicio, fecha_fin, fecha_generacion, archivo_url) FROM stdin;
+\.
+
+
+--
+-- TOC entry 5214 (class 0 OID 33256)
+-- Dependencies: 220
+-- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.roles (id_rol, nombre, descripcion, estado, fecha_creacion) FROM stdin;
+1	Administrador	Usuario con control total del sistema	t	2026-06-28 00:57:40.196823
+2	Trabajador	Usuario encargado de ventas, caja e inventario operativo	t	2026-06-28 00:57:40.196823
+3	Cliente	Usuario que consulta productos, precios, stock y ubicación	t	2026-06-28 00:57:40.196823
+\.
+
+
+--
+-- TOC entry 5240 (class 0 OID 41477)
+-- Dependencies: 248
+-- Data for Name: sesiones_usuario; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.sesiones_usuario (id, id_usuario, access_token, refresh_token, ip_address, user_agent, dispositivo, fecha_inicio, fecha_expiracion, ultima_actividad, activo, cerrado_manualmente, created_at) FROM stdin;
+\.
+
+
+--
+-- TOC entry 5216 (class 0 OID 33271)
+-- Dependencies: 222
+-- Data for Name: usuarios; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.usuarios (id_usuario, id_rol, nombre, apellido, telefono, email, password_hash, activo, token_reset, token_reset_exp, created_at, updated_at, ultimo_login, avatar_url) FROM stdin;
+1	1	Gersael	Rojas	999999999	admin@minimarket.com	$2b$10$ejemplo_hash_bcrypt	t	\N	\N	\N	\N	\N	\N
+\.
+
+
+--
+-- TOC entry 5230 (class 0 OID 33447)
+-- Dependencies: 236
+-- Data for Name: ventas; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.ventas (id_venta, id_cliente, id_trabajador, fecha, total, metodo_pago, estado) FROM stdin;
+\.
+
+
+--
+-- TOC entry 5260 (class 0 OID 0)
+-- Dependencies: 241
+-- Name: alertas_stock_id_alerta_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.alertas_stock_id_alerta_seq', 1, false);
+
+
+--
+-- TOC entry 5261 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: anaqueles_id_anaquel_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.anaqueles_id_anaquel_seq', 3, true);
+
+
+--
+-- TOC entry 5262 (class 0 OID 0)
+-- Dependencies: 239
+-- Name: boletas_id_boleta_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.boletas_id_boleta_seq', 1, false);
+
+
+--
+-- TOC entry 5263 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: categorias_id_categoria_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.categorias_id_categoria_seq', 4, true);
+
+
+--
+-- TOC entry 5264 (class 0 OID 0)
+-- Dependencies: 237
+-- Name: detalle_ventas_id_detalle_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.detalle_ventas_id_detalle_seq', 1, false);
+
+
+--
+-- TOC entry 5265 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: imagenes_productos_id_imagen_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.imagenes_productos_id_imagen_seq', 1, false);
+
+
+--
+-- TOC entry 5266 (class 0 OID 0)
+-- Dependencies: 231
+-- Name: inventario_id_inventario_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.inventario_id_inventario_seq', 4, true);
+
+
+--
+-- TOC entry 5267 (class 0 OID 0)
+-- Dependencies: 233
+-- Name: movimientos_inventario_id_movimiento_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.movimientos_inventario_id_movimiento_seq', 1, false);
+
+
+--
+-- TOC entry 5268 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: productos_id_producto_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.productos_id_producto_seq', 4, true);
+
+
+--
+-- TOC entry 5269 (class 0 OID 0)
+-- Dependencies: 243
+-- Name: reportes_inventario_id_reporte_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.reportes_inventario_id_reporte_seq', 1, false);
+
+
+--
+-- TOC entry 5270 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: roles_id_rol_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.roles_id_rol_seq', 3, true);
+
+
+--
+-- TOC entry 5271 (class 0 OID 0)
+-- Dependencies: 247
+-- Name: sesiones_usuario_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.sesiones_usuario_id_seq', 1, false);
+
+
+--
+-- TOC entry 5272 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: usuarios_id_usuario_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.usuarios_id_usuario_seq', 1, true);
+
+
+--
+-- TOC entry 5273 (class 0 OID 0)
+-- Dependencies: 235
+-- Name: ventas_id_venta_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.ventas_id_venta_seq', 1, false);
+
+
+--
+-- TOC entry 5041 (class 2606 OID 33546)
+-- Name: alertas_stock alertas_stock_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.alertas_stock
+    ADD CONSTRAINT alertas_stock_pkey PRIMARY KEY (id_alerta);
+
+
+--
+-- TOC entry 5003 (class 2606 OID 33347)
+-- Name: anaqueles anaqueles_codigo_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.anaqueles
+    ADD CONSTRAINT anaqueles_codigo_key UNIQUE (codigo);
+
+
+--
+-- TOC entry 5005 (class 2606 OID 33345)
+-- Name: anaqueles anaqueles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.anaqueles
+    ADD CONSTRAINT anaqueles_pkey PRIMARY KEY (id_anaquel);
+
+
+--
+-- TOC entry 5035 (class 2606 OID 33520)
+-- Name: boletas boletas_id_venta_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.boletas
+    ADD CONSTRAINT boletas_id_venta_key UNIQUE (id_venta);
+
+
+--
+-- TOC entry 5037 (class 2606 OID 33522)
+-- Name: boletas boletas_numero_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.boletas
+    ADD CONSTRAINT boletas_numero_key UNIQUE (numero);
+
+
+--
+-- TOC entry 5039 (class 2606 OID 33518)
+-- Name: boletas boletas_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.boletas
+    ADD CONSTRAINT boletas_pkey PRIMARY KEY (id_boleta);
+
+
+--
+-- TOC entry 4999 (class 2606 OID 33331)
+-- Name: categorias categorias_nombre_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.categorias
+    ADD CONSTRAINT categorias_nombre_key UNIQUE (nombre);
+
+
+--
+-- TOC entry 5001 (class 2606 OID 33329)
+-- Name: categorias categorias_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.categorias
+    ADD CONSTRAINT categorias_pkey PRIMARY KEY (id_categoria);
+
+
+--
+-- TOC entry 5031 (class 2606 OID 33491)
+-- Name: detalle_ventas detalle_ventas_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.detalle_ventas
+    ADD CONSTRAINT detalle_ventas_pkey PRIMARY KEY (id_detalle);
+
+
+--
+-- TOC entry 5014 (class 2606 OID 33390)
+-- Name: imagenes_productos imagenes_productos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.imagenes_productos
+    ADD CONSTRAINT imagenes_productos_pkey PRIMARY KEY (id_imagen);
+
+
+--
+-- TOC entry 5017 (class 2606 OID 33414)
+-- Name: inventario inventario_id_producto_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.inventario
+    ADD CONSTRAINT inventario_id_producto_key UNIQUE (id_producto);
+
+
+--
+-- TOC entry 5019 (class 2606 OID 33412)
+-- Name: inventario inventario_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.inventario
+    ADD CONSTRAINT inventario_pkey PRIMARY KEY (id_inventario);
+
+
+--
+-- TOC entry 5024 (class 2606 OID 33435)
+-- Name: movimientos_inventario movimientos_inventario_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.movimientos_inventario
+    ADD CONSTRAINT movimientos_inventario_pkey PRIMARY KEY (id_movimiento);
+
+
+--
+-- TOC entry 5010 (class 2606 OID 33366)
+-- Name: productos productos_codigo_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.productos
+    ADD CONSTRAINT productos_codigo_key UNIQUE (codigo);
+
+
+--
+-- TOC entry 5012 (class 2606 OID 33364)
+-- Name: productos productos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.productos
+    ADD CONSTRAINT productos_pkey PRIMARY KEY (id_producto);
+
+
+--
+-- TOC entry 5046 (class 2606 OID 33564)
+-- Name: reportes_inventario reportes_inventario_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.reportes_inventario
+    ADD CONSTRAINT reportes_inventario_pkey PRIMARY KEY (id_reporte);
+
+
+--
+-- TOC entry 4989 (class 2606 OID 33269)
+-- Name: roles roles_nombre_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.roles
+    ADD CONSTRAINT roles_nombre_key UNIQUE (nombre);
+
+
+--
+-- TOC entry 4991 (class 2606 OID 33267)
+-- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.roles
+    ADD CONSTRAINT roles_pkey PRIMARY KEY (id_rol);
+
+
+--
+-- TOC entry 5048 (class 2606 OID 41492)
+-- Name: sesiones_usuario sesiones_usuario_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.sesiones_usuario
+    ADD CONSTRAINT sesiones_usuario_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4995 (class 2606 OID 41406)
+-- Name: usuarios usuarios_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usuarios
+    ADD CONSTRAINT usuarios_email_key UNIQUE (email);
+
+
+--
+-- TOC entry 4997 (class 2606 OID 41413)
+-- Name: usuarios usuarios_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usuarios
+    ADD CONSTRAINT usuarios_pkey PRIMARY KEY (id_usuario);
+
+
+--
+-- TOC entry 5029 (class 2606 OID 33465)
+-- Name: ventas ventas_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ventas
+    ADD CONSTRAINT ventas_pkey PRIMARY KEY (id_venta);
+
+
+--
+-- TOC entry 5042 (class 1259 OID 33588)
+-- Name: idx_alertas_estado; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_alertas_estado ON public.alertas_stock USING btree (estado);
+
+
+--
+-- TOC entry 5043 (class 1259 OID 33587)
+-- Name: idx_alertas_producto; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_alertas_producto ON public.alertas_stock USING btree (id_producto);
+
+
+--
+-- TOC entry 5032 (class 1259 OID 33586)
+-- Name: idx_detalle_producto; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_detalle_producto ON public.detalle_ventas USING btree (id_producto);
+
+
+--
+-- TOC entry 5033 (class 1259 OID 33585)
+-- Name: idx_detalle_venta; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_detalle_venta ON public.detalle_ventas USING btree (id_venta);
+
+
+--
+-- TOC entry 5015 (class 1259 OID 33578)
+-- Name: idx_inventario_producto; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_inventario_producto ON public.inventario USING btree (id_producto);
+
+
+--
+-- TOC entry 5020 (class 1259 OID 33581)
+-- Name: idx_movimientos_fecha; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_movimientos_fecha ON public.movimientos_inventario USING btree (fecha);
+
+
+--
+-- TOC entry 5021 (class 1259 OID 33579)
+-- Name: idx_movimientos_producto; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_movimientos_producto ON public.movimientos_inventario USING btree (id_producto);
+
+
+--
+-- TOC entry 5022 (class 1259 OID 33580)
+-- Name: idx_movimientos_usuario; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_movimientos_usuario ON public.movimientos_inventario USING btree (id_usuario);
+
+
+--
+-- TOC entry 5006 (class 1259 OID 33577)
+-- Name: idx_productos_anaquel; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_productos_anaquel ON public.productos USING btree (id_anaquel);
+
+
+--
+-- TOC entry 5007 (class 1259 OID 33576)
+-- Name: idx_productos_categoria; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_productos_categoria ON public.productos USING btree (id_categoria);
+
+
+--
+-- TOC entry 5008 (class 1259 OID 33575)
+-- Name: idx_productos_nombre; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_productos_nombre ON public.productos USING btree (nombre);
+
+
+--
+-- TOC entry 5044 (class 1259 OID 33589)
+-- Name: idx_reportes_generado_por; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_reportes_generado_por ON public.reportes_inventario USING btree (generado_por);
+
+
+--
+-- TOC entry 4992 (class 1259 OID 41407)
+-- Name: idx_usuarios_email; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_usuarios_email ON public.usuarios USING btree (email);
+
+
+--
+-- TOC entry 4993 (class 1259 OID 41444)
+-- Name: idx_usuarios_rol; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_usuarios_rol ON public.usuarios USING btree (id_rol);
+
+
+--
+-- TOC entry 5025 (class 1259 OID 33584)
+-- Name: idx_ventas_cliente; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_ventas_cliente ON public.ventas USING btree (id_cliente);
+
+
+--
+-- TOC entry 5026 (class 1259 OID 33582)
+-- Name: idx_ventas_fecha; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_ventas_fecha ON public.ventas USING btree (fecha);
+
+
+--
+-- TOC entry 5027 (class 1259 OID 33583)
+-- Name: idx_ventas_trabajador; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_ventas_trabajador ON public.ventas USING btree (id_trabajador);
+
+
+--
+-- TOC entry 5061 (class 2606 OID 33547)
+-- Name: alertas_stock fk_alertas_productos; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.alertas_stock
+    ADD CONSTRAINT fk_alertas_productos FOREIGN KEY (id_producto) REFERENCES public.productos(id_producto) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 5060 (class 2606 OID 33523)
+-- Name: boletas fk_boletas_ventas; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.boletas
+    ADD CONSTRAINT fk_boletas_ventas FOREIGN KEY (id_venta) REFERENCES public.ventas(id_venta) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 5058 (class 2606 OID 33497)
+-- Name: detalle_ventas fk_detalle_ventas_productos; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.detalle_ventas
+    ADD CONSTRAINT fk_detalle_ventas_productos FOREIGN KEY (id_producto) REFERENCES public.productos(id_producto) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 5059 (class 2606 OID 33492)
+-- Name: detalle_ventas fk_detalle_ventas_ventas; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.detalle_ventas
+    ADD CONSTRAINT fk_detalle_ventas_ventas FOREIGN KEY (id_venta) REFERENCES public.ventas(id_venta) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 5052 (class 2606 OID 33391)
+-- Name: imagenes_productos fk_imagenes_productos; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.imagenes_productos
+    ADD CONSTRAINT fk_imagenes_productos FOREIGN KEY (id_producto) REFERENCES public.productos(id_producto) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 5053 (class 2606 OID 33415)
+-- Name: inventario fk_inventario_productos; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.inventario
+    ADD CONSTRAINT fk_inventario_productos FOREIGN KEY (id_producto) REFERENCES public.productos(id_producto) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 5054 (class 2606 OID 33436)
+-- Name: movimientos_inventario fk_movimientos_productos; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.movimientos_inventario
+    ADD CONSTRAINT fk_movimientos_productos FOREIGN KEY (id_producto) REFERENCES public.productos(id_producto) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 5055 (class 2606 OID 41415)
+-- Name: movimientos_inventario fk_movimientos_usuarios; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.movimientos_inventario
+    ADD CONSTRAINT fk_movimientos_usuarios FOREIGN KEY (id_usuario) REFERENCES public.usuarios(id_usuario) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 5050 (class 2606 OID 33372)
+-- Name: productos fk_productos_anaqueles; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.productos
+    ADD CONSTRAINT fk_productos_anaqueles FOREIGN KEY (id_anaquel) REFERENCES public.anaqueles(id_anaquel) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- TOC entry 5051 (class 2606 OID 33367)
+-- Name: productos fk_productos_categorias; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.productos
+    ADD CONSTRAINT fk_productos_categorias FOREIGN KEY (id_categoria) REFERENCES public.categorias(id_categoria) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 5062 (class 2606 OID 41430)
+-- Name: reportes_inventario fk_reportes_usuarios; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.reportes_inventario
+    ADD CONSTRAINT fk_reportes_usuarios FOREIGN KEY (generado_por) REFERENCES public.usuarios(id_usuario) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 5063 (class 2606 OID 41493)
+-- Name: sesiones_usuario fk_sesiones_usuario; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.sesiones_usuario
+    ADD CONSTRAINT fk_sesiones_usuario FOREIGN KEY (id_usuario) REFERENCES public.usuarios(id_usuario) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 5049 (class 2606 OID 41466)
+-- Name: usuarios fk_usuarios_roles; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usuarios
+    ADD CONSTRAINT fk_usuarios_roles FOREIGN KEY (id_rol) REFERENCES public.roles(id_rol) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 5056 (class 2606 OID 41420)
+-- Name: ventas fk_ventas_cliente; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ventas
+    ADD CONSTRAINT fk_ventas_cliente FOREIGN KEY (id_cliente) REFERENCES public.usuarios(id_usuario) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- TOC entry 5057 (class 2606 OID 41425)
+-- Name: ventas fk_ventas_trabajador; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ventas
+    ADD CONSTRAINT fk_ventas_trabajador FOREIGN KEY (id_trabajador) REFERENCES public.usuarios(id_usuario) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+-- Completed on 2026-06-30 21:22:23
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict K0l4WcRJG6hnD3Tr09uc7N5OI23YneeocGCf2W0MCau1Yn9ogJwSvqKRhvqoFoC
+
