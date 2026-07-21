@@ -1,0 +1,7 @@
+export interface Categoria {
+  id_categoria: number;
+  nombre: string;
+  descripcion: string;
+  estado: boolean;
+  id_tienda: number;
+}

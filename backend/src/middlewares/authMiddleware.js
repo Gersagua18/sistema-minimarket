@@ -21,7 +21,7 @@ const protegerRuta=async (req,res,next)=>{
             throw new UnauthorizedError('Sesión inválida o expirada');
         }
   
-        const usuarioResultado=await usuarioModel.obtenerUsuarioPorID(decoded.id);
+        const usuarioResultado=await usuarioModel.obtenerUsuarioPorID(decoded.id_usuario);
         
         if (usuarioResultado.rows.length===0) {
             throw new UnauthorizedError('Usuario no encontrado');

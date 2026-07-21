@@ -1,0 +1,112 @@
+<div class="animate-fade-in pb-4 h-100 d-flex flex-column">
+  
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+      <h2 class="font-display fw-bold text-dark mb-1">Personal de Tienda</h2>
+      <p class="text-muted mb-0">Administra quiénes tienen acceso a tu tienda y sus roles.</p>
+    </div>
+    <button class="btn btn-primary d-flex align-items-center gap-2 px-3 fw-medium rounded-3" (click)="openAsignarModal()">
+      <i class="bi bi-person-plus"></i> <span class="d-none d-sm-inline">Crear Empleado</span>
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="flex-grow-1 d-flex justify-content-center align-items-center">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <div class="row g-4" *ngIf="!loading">
+    <div class="col-12 col-md-6 col-lg-4" *ngFor="let trab of trabajadores">
+      <div class="card shadow-sm border-0 rounded-4 h-100 hover-card p-3">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <img src="https://ui-avatars.com/api/?name={{ trab.nombre }}+{{ trab.apellido }}&background=a67cff&color=fff" 
+               class="rounded-circle border border" width="50" height="50" alt="Avatar">
+          <div class="overflow-hidden">
+            <h6 class="text-dark fw-bold mb-0 text-truncate">{{ trab.nombre }} {{ trab.apellido === '(Empleado)' ? '' : trab.apellido }}</h6>
+            <div class="small text-muted text-truncate">{{ trab.email }}</div>
+          </div>
+        </div>
+        
+        <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top border">
+          <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-2 rounded-pill">
+            <i class="bi bi-person-badge me-1"></i> {{ trab.rol_tienda }}
+          </span>
+          <button class="btn btn-sm btn-outline-danger border-0 rounded-circle" style="width: 32px; height: 32px; padding: 0;" (click)="removerTrabajador(trab.id_usuario)" title="Revocar Acceso">
+            <i class="bi bi-person-dash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 text-center py-5" *ngIf="trabajadores.length === 0">
+      <i class="bi bi-people text-secondary opacity-50 mb-3 d-block" style="font-size: 4rem;"></i>
+      <h4 class="text-dark">Sin Personal</h4>
+      <p class="text-muted">Aún no has agregado trabajadores a esta tienda.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Crear Empleado -->
+<ng-template #asignarModal let-modal>
+  <div class="modal-content bg-white text-dark border border rounded-4 overflow-hidden shadow-lg">
+    <div class="modal-header border-bottom border bg-white bg-opacity-10 px-4 py-3">
+      <h5 class="modal-title font-display fw-bold">Crear Empleado</h5>
+      <button type="button" class="btn-close btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body p-4">
+      <p class="text-muted small mb-4">Crea un usuario y contraseña simples para que tu empleado ingrese a esta sucursal.</p>
+      
+      <form [formGroup]="asignarForm">
+        
+        <div class="mb-4">
+          <label class="form-label text-muted small text-uppercase tracking-wider fw-semibold">Nombre de Usuario</label>
+          <div class="input-group">
+            <span class="input-group-text bg-white border text-secondary">
+              <i class="bi bi-person"></i>
+            </span>
+            <input type="text" class="form-control bg-white border-start-0 border text-dark ps-0" formControlName="username" placeholder="ej. juan_cajero">
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label text-muted small text-uppercase tracking-wider fw-semibold">Contraseña del Empleado</label>
+          <div class="input-group">
+            <span class="input-group-text bg-white border text-secondary">
+              <i class="bi bi-key"></i>
+            </span>
+            <input type="password" class="form-control bg-white border-start-0 border text-dark ps-0" formControlName="password" placeholder="Mínimo 6 caracteres">
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <label class="form-label text-muted small text-uppercase tracking-wider fw-semibold">Rol Asignado</label>
+          <select class="form-select bg-white border text-dark" formControlName="rol_tienda">
+            <option value="Administrador">Administrador de Tienda</option>
+            <option value="Cajero">Cajero / Vendedor</option>
+            <option value="Reposicion">Personal de Reposición</option>
+          </select>
+        </div>
+
+        <hr class="mb-4">
+
+        <div class="mb-3">
+          <label class="form-label text-danger small text-uppercase tracking-wider fw-semibold">Tu Contraseña (Seguridad)</label>
+          <div class="input-group">
+            <span class="input-group-text bg-white border text-secondary border-danger">
+              <i class="bi bi-shield-lock text-danger"></i>
+            </span>
+            <input type="password" class="form-control bg-white border-start-0 border text-dark ps-0 border-danger" formControlName="admin_password" placeholder="Tu contraseña de administrador">
+          </div>
+          <div class="form-text small text-muted">Ingresa tu propia contraseña para autorizar la creación.</div>
+        </div>
+
+      </form>
+    </div>
+    <div class="modal-footer border-top border p-3">
+      <button type="button" class="btn btn-secondary rounded-pill px-4" (click)="modal.dismiss()">Cancelar</button>
+      <button type="button" class="btn btn-primary rounded-pill px-4 d-flex align-items-center gap-2" [disabled]="asignarForm.invalid" (click)="crearEmpleado()">
+        <i class="bi bi-person-check-fill"></i> Crear Empleado
+      </button>
+    </div>
+  </div>
+</ng-template>
+

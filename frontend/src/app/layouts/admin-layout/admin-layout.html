@@ -1,1 +1,86 @@
-<p>admin-layout works!</p>
+<div class="d-flex min-vh-100" style="background-color: #FCFAF5;">
+  
+  <!-- Sidebar -->
+  <aside class="sidebar shadow-sm d-flex flex-column text-white" [class.collapsed]="!sidebarOpen" style="background-color: #16202B; border-right: 1px solid rgba(255,255,255,0.05);">
+    
+    <!-- Sidebar Header & Tienda -->
+    <div class="sidebar-header p-3 d-flex flex-column border-bottom" style="border-color: rgba(255,255,255,0.05) !important; min-height: 76px;">
+      <!-- Store Info -->
+      <div class="d-flex align-items-center justify-content-center gap-2 h-100">
+        <div class="rounded-3 d-flex justify-content-center align-items-center bg-white flex-shrink-0" style="width: 40px; height: 40px;">
+          <!-- Official MercaLink SVG Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style="width: 24px; height: 24px;">
+            <g stroke="#16202B" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M 10 12 C 10 5.5 22 5.5 22 12" />
+              <line x1="4" y1="12" x2="28" y2="12" />
+              <path d="M 5 12 L 8 27 C 8.2 27.8 8.8 28 9.5 28 L 11 28 L 11 16 L 16 20 L 21 16 L 21 28 L 22.5 28 C 23.2 28 23.8 27.8 24 27 L 27 12" />
+            </g>
+            <path d="M 16 22 C 14.5 22 13.5 23 13.5 24.5 C 13.5 26.5 16 29.5 16 29.5 C 16 29.5 18.5 26.5 18.5 24.5 C 18.5 23 17.5 22 16 22 Z" fill="#16202B"/>
+            <circle cx="16" cy="24.2" r="1" fill="#ffffff"/>
+          </svg>
+        </div>
+        <div class="d-flex flex-column overflow-hidden text-white" *ngIf="sidebarOpen" style="flex-grow: 1;">
+          <span class="text-truncate fw-bold mb-0" style="font-size: 1rem;">{{ tiendaActual?.nombre || 'Cargando...' }}</span>
+          <span class="text-white-50 text-truncate" style="font-size: 0.75rem;">Administración</span>
+        </div>
+      </div>
+      <!-- Cambiar Tienda Button -->
+      <button class="btn btn-sm w-100 mt-3 d-flex justify-content-center align-items-center gap-2" 
+              style="background-color: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1);" 
+              (click)="cambiarTienda()" *ngIf="sidebarOpen">
+        <i class="bi bi-code"></i> <span style="font-size: 0.8rem;">Cambiar tienda</span>
+      </button>
+    </div>
+
+    <!-- Navigation -->
+    <div class="sidebar-nav flex-grow-1 overflow-auto py-3 px-2">
+      <ul class="nav flex-column gap-1">
+        <li class="nav-item" *ngFor="let item of menuItems">
+          <a class="nav-link rounded-2 d-flex align-items-center py-2 px-3 mb-1" 
+             [routerLink]="item.path" routerLinkActive="active"
+             style="color: #A0ABC0; font-size: 0.95rem;">
+            <i class="bi" [ngClass]="item.icon" style="font-size: 1.1rem;"></i>
+            <span class="ms-3 text-nowrap overflow-hidden" *ngIf="sidebarOpen">{{ item.label }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- User Profile -->
+    <div class="sidebar-footer p-3 border-top" style="border-color: rgba(255,255,255,0.05) !important;">
+      <div class="d-flex align-items-center justify-content-center rounded-3 p-2" [ngStyle]="{'background-color': sidebarOpen ? 'rgba(255,255,255,0.05)' : 'transparent'}">
+        <img [src]="'https://ui-avatars.com/api/?name=' + auth.currentUser()?.nombre + '+' + (auth.currentUser()?.apellido === '(Empleado)' ? '' : auth.currentUser()?.apellido) + '&background=1A535C&color=fff'" 
+             class="rounded-circle flex-shrink-0" width="36" height="36" alt="User">
+        <div class="ms-3 overflow-hidden text-nowrap d-flex flex-column" *ngIf="sidebarOpen" style="flex-grow: 1;">
+          <span class="text-white fw-medium small text-truncate">{{ auth.currentUser()?.nombre }}</span>
+          <span class="text-white-50" style="font-size: 0.7rem;">Administrador</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-grow-1 d-flex flex-column overflow-hidden position-relative h-100">
+    
+    <!-- Topbar (Optional, can be hidden or styled to match #FCFAF5 if you want it seamless) -->
+    <!-- Not strictly visible in the second image but we keep it for mobile toggling/logout -->
+    <header class="topbar d-flex align-items-center justify-content-between px-4 py-2 sticky-top" style="background-color: #FCFAF5;">
+      <button class="btn btn-sm border-0 rounded-circle" style="width: 38px; height: 38px; color: #16202B; background: rgba(0,0,0,0.05);" (click)="toggleSidebar()">
+        <i class="bi bi-list fs-5"></i>
+      </button>
+
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-outline-danger btn-sm rounded-pill px-3 d-flex align-items-center gap-2" (click)="logout()">
+          <i class="bi bi-box-arrow-right"></i> <span class="d-none d-md-inline">Cerrar Sesión</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Router Outlet Container -->
+    <div class="content-wrapper flex-grow-1 overflow-auto px-4 px-md-5 pb-4 pb-md-5 pt-2">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>
+
+

@@ -1,0 +1,69 @@
+<div class="min-vh-100 d-flex align-items-center justify-content-center" style="background-color: #FCF8F4;">
+    <div class="card border-0 shadow-sm rounded-4" style="width: 100%; max-width: 420px; overflow: hidden;">
+        <div class="card-header border-0 text-center py-4 text-white" style="background-color: #1D3557;">
+            <div class="d-flex justify-content-center align-items-center mb-2 mx-auto bg-white rounded-3" style="width: 56px; height: 56px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style="width: 32px; height: 32px;">
+                    <g stroke="#1D3557" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M 10 12 C 10 5.5 22 5.5 22 12" />
+                      <line x1="4" y1="12" x2="28" y2="12" />
+                      <path d="M 5 12 L 8 27 C 8.2 27.8 8.8 28 9.5 28 L 11 28 L 11 16 L 16 20 L 21 16 L 21 28 L 22.5 28 C 23.2 28 23.8 27.8 24 27 L 27 12" />
+                    </g>
+                    <path d="M 16 22 C 14.5 22 13.5 23 13.5 24.5 C 13.5 26.5 16 29.5 16 29.5 C 16 29.5 18.5 26.5 18.5 24.5 C 18.5 23 17.5 22 16 22 Z" fill="#1D3557"/>
+                    <circle cx="16" cy="24.2" r="1" fill="#ffffff"/>
+                </svg>
+            </div>
+            <h4 class="mb-0 fw-bold font-display" style="letter-spacing: -0.5px;">{{ storeName || 'Sucursal' }}</h4>
+            <p class="text-white-50 mb-0 small">Acceso exclusivo para empleados</p>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+            <div *ngIf="error" class="alert alert-danger d-flex align-items-center p-3 mb-4 rounded-3 border-0 bg-danger bg-opacity-10" role="alert">
+                <i class="bi bi-exclamation-circle-fill text-danger fs-5 me-3"></i>
+                <div class="text-danger small fw-medium">
+                    {{ error }}
+                </div>
+            </div>
+
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <!-- Username / Email -->
+                <div class="form-floating mb-4">
+                    <input type="text" class="form-control bg-light border-0 fw-medium" id="email" 
+                           formControlName="email" placeholder="Usuario o Correo"
+                           [ngClass]="{'is-invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}">
+                    <label for="email" class="text-muted"><i class="bi bi-person me-2"></i>Usuario o Correo</label>
+                </div>
+
+                <!-- Password -->
+                <div class="form-floating mb-4">
+                    <input type="password" class="form-control bg-light border-0 fw-medium" id="password" 
+                           formControlName="password" placeholder="Contraseña"
+                           [ngClass]="{'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}">
+                    <label for="password" class="text-muted"><i class="bi bi-lock me-2"></i>Contraseña</label>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="rememberMe">
+                        <label class="form-check-label small text-muted" for="rememberMe">
+                            Recordarme
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn w-100 py-3 fw-bold text-white rounded-3 shadow-sm mb-3 d-flex justify-content-center align-items-center" 
+                        style="background-color: #55B4A6; border: none; font-size: 1rem;"
+                        [disabled]="loginForm.invalid || loading">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <i *ngIf="!loading" class="bi bi-box-arrow-in-right me-2 fs-5"></i>
+                    Ingresar a sucursal
+                </button>
+            </form>
+            
+            <div class="text-center mt-4">
+                <a routerLink="/portal/tiendas" class="text-decoration-none small text-muted">
+                    <i class="bi bi-arrow-left me-1"></i> Volver al Portal Directorio
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

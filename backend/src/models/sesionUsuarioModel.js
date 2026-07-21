@@ -3,7 +3,7 @@ const pool=require('../config/database');
 const crearSesion= async(usuario_id,access_token,refresh_token,ip_address,user_agent,dispositivo,fecha_expiracion)=>{
     return await pool.query(
         `INSERT INTO sesiones_usuario (
-            usuario_id,
+            id_usuario,
             access_token,
             refresh_token,
             ip_address,

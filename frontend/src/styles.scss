@@ -1,4 +1,180 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'bootstrap/scss/bootstrap';
+@use 'bootstrap-icons/font/bootstrap-icons.css';
 
-/* Importing Bootstrap SCSS file. */
-@import 'bootstrap/scss/bootstrap';
+:root {
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  /* MercaLink Brand Colors */
+  --background: #FCF8F4;
+  --foreground: #1D3557;
+
+  --card: #ffffff;
+  --card-foreground: #1D3557;
+
+  --primary: #06A69F;
+  --primary-foreground: #ffffff;
+  --primary-soft: rgba(6, 166, 159, 0.1);
+
+  --secondary: #eef2f6;
+  --secondary-foreground: #1D3557;
+
+  --muted: #f4f6f8;
+  --muted-foreground: #64748b;
+
+  --accent: oklch(0.65 0.13 45);
+  --accent-foreground: oklch(0.99 0 0);
+  --accent-soft: oklch(0.95 0.04 55);
+
+  --destructive: oklch(0.58 0.19 27);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(0.90 0.012 80);
+
+  --stock-ok: oklch(0.56 0.14 155);
+  --stock-low: oklch(0.72 0.14 75);
+  --stock-critical: oklch(0.58 0.20 27);
+  --stock-empty: oklch(0.85 0.005 240);
+
+  // Bootstrap Native Overrides
+  --bs-body-bg: var(--background);
+  --bs-body-color: var(--foreground);
+  --bs-primary: var(--primary);
+  --bs-secondary: var(--secondary);
+  --bs-border-color: var(--border);
+  --bs-font-sans-serif: var(--font-sans);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--background);
+  color: var(--foreground);
+  background-image:
+    radial-gradient(1200px 600px at 90% -10%, oklch(0.93 0.04 45 / 0.35), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, oklch(0.90 0.04 232 / 0.35), transparent 60%),
+    linear-gradient(180deg, oklch(0.985 0.006 80), oklch(0.975 0.01 60));
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+}
+
+.card {
+  background-color: var(--card);
+  color: var(--card-foreground);
+  border-color: var(--border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.form-control,
+.form-select {
+  background-color: #ffffff;
+  border-color: var(--border);
+  color: var(--foreground);
+
+  &:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(107, 114, 128, 0.25);
+  }
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 500;
+
+  &:hover {
+    background-color: oklch(0.35 0.07 232);
+    border-color: oklch(0.35 0.07 232);
+  }
+}
+
+.btn-secondary {
+  background-color: var(--secondary);
+  border-color: var(--border);
+  color: var(--secondary-foreground);
+
+  &:hover {
+    background-color: oklch(0.90 0.01 80);
+  }
+}
+
+// Custom Stock Badges mapped to Bootstrap classes structurally
+.badge-stock-ok {
+  background-color: var(--stock-ok);
+  color: #fff;
+}
+
+.badge-stock-low {
+  background-color: var(--stock-low);
+  color: #000;
+}
+
+.badge-stock-critical {
+  background-color: var(--stock-critical);
+  color: #fff;
+}
+
+.badge-stock-empty {
+  background-color: var(--stock-empty);
+  color: #fff;
+}
+
+// Utility Overrides
+.text-muted {
+  color: var(--muted-foreground) !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+// Overrides para anular mis clases dark mode antiguas
+.glass-panel {
+  background-color: var(--card) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+
+.border-secondary {
+  border-color: var(--border) !important;
+}
+
+// Split Screen Auth Layout
+.split-left-panel {
+  background-color: #1D3557;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.2;
+    background: radial-gradient(circle at 30% 20%, #06A69F, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+}

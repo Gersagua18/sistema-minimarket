@@ -1,0 +1,6 @@
+<div class="d-flex align-items-center" [ngClass]="{'gap-3': showText}">
+  <img src="assets/images/logo2.png" alt="MercaLink" [style.height.px]="height" class="rounded-3 shadow-sm border border-opacity-25" [ngClass]="darkTheme ? 'border-light' : 'border-primary'">
+  <span *ngIf="showText" class="font-display fw-bold text-nowrap" [ngClass]="darkTheme ? 'text-white' : 'text-dark'" [style.fontSize.px]="height * 0.55">
+    MercaLink
+  </span>
+</div>

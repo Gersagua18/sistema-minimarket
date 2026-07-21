@@ -1,0 +1,16 @@
+.hover-bg-primary:hover {
+  background-color: rgba(166, 124, 255, 0.1) !important;
+  color: var(--primary) !important;
+}
+
+.hover-bg-danger:hover {
+  background-color: rgba(220, 53, 69, 0.1) !important;
+  color: var(--bs-danger) !important;
+}
+
+// Estilos globales de NgbModal para backdrop glassmorphism (esto normalmente iría en styles.scss, 
+// pero ng-bootstrap permite pasar 'backdropClass' o afecta globales)
+:host ::ng-deep .glass-backdrop {
+  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.6);
+}

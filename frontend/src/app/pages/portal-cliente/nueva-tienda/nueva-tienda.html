@@ -1,0 +1,205 @@
+<div class="min-vh-100 bg-background">
+  <header class="border-bottom border bg-card sticky-top" style="z-index: 10;">
+    <div class="container-fluid" style="max-width: 800px;">
+      <div class="d-flex align-items-center justify-content-between py-3">
+        <div>
+          <p class="font-display fs-5 fw-bold mb-0 text-dark">Configurar minimarket</p>
+          <p class="small text-muted mb-0">Paso {{ step + 1 }} de {{ steps.length }} &mdash; {{ steps[step] }}</p>
+        </div>
+        <button (click)="cancelar()" class="btn btn-light rounded-2 px-2 py-1" style="background-color: transparent;">
+          <i class="bi bi-x-lg text-dark"></i>
+        </button>
+      </div>
+    </div>
+    <!-- ProgressBar -->
+    <div class="bg-secondary bg-opacity-25" style="height: 4px;">
+      <div class="bg-primary h-100" style="transition: width 0.3s;" [style.width]="((step + 1) / steps.length) * 100 + '%'"></div>
+    </div>
+  </header>
+
+  <main class="container-fluid py-5" style="max-width: 800px;">
+    
+    <!-- Step 0: Ubicación -->
+    <div *ngIf="step === 0" class="card shadow-sm border-0 rounded-4 p-4 p-md-5 bg-card">
+      <h3 class="font-display fw-bold mb-1 text-dark">Datos y ubicación</h3>
+      <p class="text-muted small mb-4">Dónde queda tu minimarket</p>
+      
+      <div class="mb-3">
+        <label class="form-label small fw-semibold text-muted">Nombre comercial</label>
+        <input type="text" class="form-control px-3 py-2 bg-transparent text-dark" [(ngModel)]="info.name" placeholder="MiniMarket Don José">
+      </div>
+      <div class="mb-3">
+        <label class="form-label small fw-semibold text-muted">Dirección</label>
+        <input type="text" class="form-control px-3 py-2 bg-transparent text-dark" [(ngModel)]="info.address" placeholder="Av. Mariscal Castilla 320">
+      </div>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label small fw-semibold text-muted">Ciudad</label>
+          <input type="text" class="form-control px-3 py-2 bg-transparent text-dark" [(ngModel)]="info.city" placeholder="Ilo">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label small fw-semibold text-muted">Región / Departamento</label>
+          <input type="text" class="form-control px-3 py-2 bg-transparent text-dark" [(ngModel)]="info.region" placeholder="Moquegua">
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 1: Credenciales -->
+    <div *ngIf="step === 1" class="card shadow-sm border-0 rounded-4 p-4 p-md-5 bg-card">
+      <h3 class="font-display fw-bold mb-1 text-dark">Credenciales del administrador</h3>
+      <p class="text-muted small mb-4">Con estos datos se iniciará sesión en la tienda para gestionarla.</p>
+      
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label class="form-label small fw-semibold text-muted">Correo electrónico (Usuario)</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0 text-muted"><i class="bi bi-person"></i></span>
+            <input type="email" class="form-control border-start-0 ps-0 bg-transparent text-dark" [(ngModel)]="creds.adminUsername" placeholder="admin@mitienda.com">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label small fw-semibold text-muted">Nombre a mostrar</label>
+          <input type="text" class="form-control px-3 py-2 bg-transparent text-dark" [(ngModel)]="creds.adminName" placeholder="Juan Pérez">
+        </div>
+      </div>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <label class="form-label small fw-semibold text-muted">Contraseña</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0 text-muted"><i class="bi bi-key"></i></span>
+            <input type="password" class="form-control border-start-0 ps-0 bg-transparent text-dark" [(ngModel)]="creds.adminPassword">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label small fw-semibold text-muted">Repetir contraseña</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0 text-muted"><i class="bi bi-key"></i></span>
+            <input type="password" class="form-control border-start-0 ps-0 bg-transparent text-dark" [(ngModel)]="creds.adminPassword2">
+          </div>
+        </div>
+      </div>
+      
+      <div class="alert alert-info border-0 bg-primary bg-opacity-10 text-dark small mb-0 d-flex gap-2">
+        <i class="bi bi-shield-check text-primary fs-5"></i>
+        <span>Esta contraseña será requerida para agregar o eliminar empleados y para acciones sensibles de configuración.</span>
+      </div>
+    </div>
+
+    <!-- Step 2: Anaqueles -->
+    <div *ngIf="step === 2" class="card shadow-sm border-0 rounded-4 p-4 p-md-5 bg-card">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h3 class="font-display fw-bold mb-1 text-dark">Distribución de anaqueles</h3>
+          <p class="text-muted small mb-0">Define los estantes físicos de tu tienda</p>
+        </div>
+        <button (click)="agregarAnaquel()" class="btn btn-outline-primary btn-sm px-3 fw-semibold rounded-pill">
+          <i class="bi bi-plus"></i> Anaquel
+        </button>
+      </div>
+      
+      <div class="d-flex flex-column gap-3">
+        <div *ngFor="let sh of shelves; let i = index" class="row g-2 align-items-center p-3 rounded-3 border bg-light">
+          <div class="col-3">
+            <label class="small text-muted mb-1" *ngIf="i===0">Identificador</label>
+            <input type="text" class="form-control form-control-sm font-monospace text-dark" [(ngModel)]="sh.id">
+          </div>
+          <div class="col-4">
+            <label class="small text-muted mb-1" *ngIf="i===0">Descripción</label>
+            <input type="text" class="form-control form-control-sm text-dark" [(ngModel)]="sh.label">
+          </div>
+          <div class="col-4">
+            <label class="small text-muted mb-1" *ngIf="i===0">Casillas</label>
+            <input type="number" min="1" max="10" class="form-control form-control-sm text-dark" [(ngModel)]="sh.slots">
+          </div>
+          <div class="col-1 text-end mt-auto">
+            <button (click)="quitarAnaquel(i)" class="btn btn-sm text-danger px-2">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Productos -->
+    <div *ngIf="step === 3" class="card shadow-sm border-0 rounded-4 p-4 p-md-5 bg-card">
+      <h3 class="font-display fw-bold mb-1 text-dark">Productos iniciales</h3>
+      <p class="text-muted small mb-4">Elige cómo comenzar tu catálogo</p>
+      
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="card h-100 border-2 rounded-3" style="cursor: pointer" 
+               [class.border-primary]="seedTemplate" 
+               [class.bg-primary]="seedTemplate" [class.bg-opacity-10]="seedTemplate"
+               (click)="seedTemplate = true">
+            <div class="card-body p-4">
+              <h5 class="fw-bold mb-2 text-dark">Cargar catálogo demo</h5>
+              <p class="text-muted small mb-0">Importa ~10 productos típicos de minimarket listos para vender.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card h-100 border-2 rounded-3" style="cursor: pointer" 
+               [class.border-primary]="!seedTemplate" 
+               [class.bg-primary]="!seedTemplate" [class.bg-opacity-10]="!seedTemplate"
+               (click)="seedTemplate = false">
+            <div class="card-body p-4">
+              <h5 class="fw-bold mb-2 text-dark">Empezar vacío</h5>
+              <p class="text-muted small mb-0">Agregarás productos manualmente después desde el Panel.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Confirmación -->
+    <div *ngIf="step === 4" class="card shadow-sm border-0 rounded-4 p-4 p-md-5 bg-card">
+      <h3 class="font-display fw-bold mb-1 text-dark">Confirmación</h3>
+      <p class="text-muted small mb-4">Revisa los datos antes de crear la tienda</p>
+      
+      <ul class="list-group list-group-flush mb-4 text-dark">
+        <li class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center bg-transparent">
+          <span class="text-muted small">Nombre</span>
+          <span class="fw-semibold">{{ info.name }}</span>
+        </li>
+        <li class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center bg-transparent">
+          <span class="text-muted small">Dirección</span>
+          <span class="fw-semibold text-end">{{ info.address }}<br><small class="text-muted fw-normal">{{ info.city }}, {{ info.region }}</small></span>
+        </li>
+        <li class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center bg-transparent">
+          <span class="text-muted small">Administrador</span>
+          <span class="fw-semibold">{{ creds.adminName }} <span class="text-primary">({{ creds.adminUsername }})</span></span>
+        </li>
+        <li class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center bg-transparent">
+          <span class="text-muted small">Anaqueles</span>
+          <span class="fw-semibold">{{ shelves.length }} estantes ({{ getTotalSlots() }} casillas)</span>
+        </li>
+        <li class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center bg-transparent">
+          <span class="text-muted small">Productos</span>
+          <span class="fw-semibold">{{ seedTemplate ? 'Catálogo demo precargado' : 'Empezar vacío' }}</span>
+        </li>
+      </ul>
+
+      <div *ngIf="error" class="alert alert-danger border-0 small mb-0">
+        {{ error }}
+      </div>
+    </div>
+
+    <!-- Botonera -->
+    <div class="d-flex justify-content-between mt-5">
+      <button (click)="atras()" class="btn btn-outline-secondary px-4 py-2 fw-semibold rounded-2 bg-card text-dark">
+        {{ step === 0 ? 'Cancelar' : 'Atrás' }}
+      </button>
+      
+      <button *ngIf="step < steps.length - 1" [disabled]="!canProceed()" (click)="siguiente()" class="btn btn-primary px-5 py-2 fw-semibold rounded-2 d-flex align-items-center gap-2">
+        Siguiente <i class="bi bi-chevron-right small"></i>
+      </button>
+      
+      <button *ngIf="step === steps.length - 1" (click)="finalizar()" [disabled]="loading" class="btn px-5 py-2 fw-semibold rounded-2 text-white d-flex align-items-center gap-2" style="background-color: #06A69F; border-color: #06A69F;">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status"></span>
+        <i *ngIf="!loading" class="bi bi-check-lg"></i> 
+        Crear minimarket
+      </button>
+    </div>
+
+  </main>
+</div>

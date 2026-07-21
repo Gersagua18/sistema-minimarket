@@ -1,1 +1,91 @@
-<p>login works!</p>
+<div class="min-vh-100 container-fluid p-0">
+  <div class="row g-0 min-vh-100">
+    <!-- Panel Izquierdo Oscuro -->
+    <div class="col-lg-6 d-none d-lg-flex flex-column justify-content-between p-5 text-white position-relative overflow-hidden split-left-panel">
+      <!-- Fondo Radial via SCSS -->
+      <div class="position-relative z-1 mt-3 ms-2">
+        <div class="mb-2">
+          <app-brand-logo [height]="44" [darkTheme]="true"></app-brand-logo>
+        </div>
+      </div>
+      
+      <div class="position-relative z-1 ms-2" style="max-width: 28rem;">
+        <h2 class="font-display fw-bold lh-sm mb-4" style="font-size: 2.5rem;">
+          Gestión profesional de minimarkets con control visual de anaqueles
+        </h2>
+        <p class="text-white-50 lh-lg mb-4">
+          Administra múltiples tiendas, controla inventario en tiempo real con
+          visualización 2.5D, procesa ventas y obtén reportes ejecutivos. Una
+          sola plataforma para administradores, empleados y clientes.
+        </p>
+        <ul class="list-unstyled text-white-75 small lh-lg">
+          <li class="mb-2">&bull; Visualización 2.5D de anaqueles con códigos de color</li>
+          <li class="mb-2">&bull; Roles: Administrador, Empleado y Portal Cliente</li>
+          <li class="mb-2">&bull; Multi-tienda con configuración personalizada</li>
+          <li class="mb-2">&bull; Alertas automáticas de stock bajo y reportes</li>
+        </ul>
+      </div>
+
+      <div class="position-relative z-1 small text-white-50 mb-3 ms-2">
+        &copy; MercaLink &middot; Trazabilidad y control
+      </div>
+    </div>
+
+    <!-- Panel Derecho Formulario -->
+    <div class="col-lg-6 d-flex flex-column align-items-center justify-content-center p-4 p-sm-5">
+      <div class="w-100" style="max-width: 420px;">
+        
+        <!-- Mobile Logo -->
+        <div class="d-flex d-lg-none justify-content-center mb-5">
+          <app-brand-logo [height]="40" [darkTheme]="false"></app-brand-logo>
+        </div>
+
+        <!-- Selector de Modo -->
+        <div class="d-flex bg-light p-1 rounded mb-4 border">
+          <button type="button" class="btn flex-grow-1 border-0 shadow-sm bg-white text-dark fw-semibold py-2">Iniciar sesión</button>
+          <a routerLink="/register" class="btn flex-grow-1 border-0 text-muted fw-semibold py-2">Crear cuenta</a>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="card border border-light shadow-sm p-4 rounded-3">
+          <div class="mb-4">
+            <h2 class="font-display fs-4 fw-bold text-dark mb-1">Bienvenido</h2>
+            <p class="small text-muted mb-0">Accede a la gestión de tus tiendas</p>
+          </div>
+
+          <div *ngIf="error" class="alert bg-danger bg-opacity-10 text-danger border-0 small rounded-3 p-2 mb-3">
+            {{ error }}
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label small fw-semibold text-muted">Usuario / Email</label>
+            <div class="position-relative">
+              <i class="bi bi-person position-absolute top-50 translate-middle-y text-muted ms-3"></i>
+              <input type="email" class="form-control bg-transparent border py-2 ps-5 focus-ring-0" 
+                     id="email" formControlName="email" placeholder="admin@minimarket.com" required>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-semibold text-muted d-flex justify-content-between">
+              Contraseña
+            </label>
+            <div class="position-relative">
+              <i class="bi bi-key position-absolute top-50 translate-middle-y text-muted ms-3"></i>
+              <input type="password" class="form-control bg-transparent border py-2 ps-5" 
+                     id="password" formControlName="password" placeholder="••••••••" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 py-2.5 fw-semibold text-white mb-4 d-flex justify-content-center align-items-center gap-2" 
+                  [disabled]="loginForm.invalid || loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <span>Entrar</span>
+          </button>
+        </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+

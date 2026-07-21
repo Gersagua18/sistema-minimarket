@@ -8,16 +8,13 @@ const obtenerUsuarioPorEmail=async(email)=>{
             r.nombre AS rol_nombre,
             u.nombre,
             u.apellido,
-            u.dni,
             u.telefono,
             u.email,
             u.password_hash,
-            u.direccion,
-            u.estado,
-            u.fecha_registro,
-            u.ultimo_login,
+            u.activo,
             u.created_at,
-            u.updated_at
+            u.updated_at,
+            u.ultimo_login
         FROM usuarios u
         INNER JOIN roles r ON u.id_rol=r.id_rol
         WHERE u.email=$1`,
@@ -33,13 +30,11 @@ const obtenerUsuarioPorID=async(id)=>{
             r.nombre AS rol_nombre,
             u.nombre,
             u.apellido,
-            u.dni,
             u.telefono,
             u.email,
             u.password_hash,
-            u.direccion,
-            u.estado,
-            u.fecha_registro,
+            u.avatar_url,
+            u.activo,
             u.ultimo_login,
             u.created_at,
             u.updated_at
@@ -59,21 +54,21 @@ const ObtenerRolPorNombre=async(nombreRol)=>{
     );
 };
 
-const crearUsuario=async(id_rol,nombre,apellido,email,password_hash,dni,telefono)=>{
+const crearUsuario=async(id_rol,nombre,apellido,email,password_hash,telefono,avatar_url,activo)=>{
     return await pool.query(
-        `INSERT INTO usuarios (id_rol,nombre,apellido,email,password_hash,dni,telefono,estado) 
+        `INSERT INTO usuarios (id_rol,nombre,apellido,email,password_hash,telefono,avatar_url,activo) 
         VALUES($1,$2,$3,$4,$5,$6,$7,TRUE)
         RETURNING
             id_rol,
             nombre,
             apellido,
             email,
-            dni,
             telefono,
-            estado,
+            avatar_url,
+            activo,
             created_at,
             updated_at`,
-        [id_rol,nombre,apellido,email,password_hash,dni,telefono || null]
+        [id_rol,nombre,apellido,email,password_hash,telefono || null,avatar_url || null]
     );
 };
 

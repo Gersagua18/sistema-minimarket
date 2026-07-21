@@ -41,8 +41,28 @@ const logout=async (req,res,next)=>{
     }
 };
 
+const loginTienda=async (req,res,next)=>{
+    try {
+        const {slug, email, password, dispositivo}=req.body;
+
+        const resultado=await authService.loginTienda({
+            slug,
+            email,
+            password,
+            dispositivo,
+            ip_address: req.ip,
+            user_agent: req.headers['user-agent']
+        });
+        return responder.successResponse(res,200,'Login de tienda correcto',resultado);
+
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     registrarUsuario,
     login,
+    loginTienda,
     logout
 };

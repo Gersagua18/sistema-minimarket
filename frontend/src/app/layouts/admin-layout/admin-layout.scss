@@ -1,0 +1,57 @@
+.sidebar {
+  width: 260px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1040;
+  
+  &.collapsed {
+    width: 80px;
+
+    .brand-text,
+    .nav-link span,
+    .sidebar-footer .ms-3 {
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+    
+    .sidebar-nav {
+      padding-inline: 0.75rem !important;
+    }
+
+    .nav-link {
+      justify-content: center;
+      padding-inline: 0 !important;
+      
+      i {
+        margin: 0 !important;
+      }
+    }
+  }
+
+  .nav-link {
+    transition: all 0.2s;
+    
+    &:hover:not(.active) {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: #fff !important;
+    }
+    
+    &.active {
+      background-color: #1A535C !important;
+      color: #fff !important;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    i {
+      transition: transform 0.2s;
+    }
+  }
+
+  .active i {
+    transform: scale(1.1);
+  }
+}
+
+.content-wrapper {
+  background-color: transparent;
+  height: calc(100vh - 71px); /* Restar altura del header */
+}

@@ -1,1 +1,81 @@
-<p>gestionar-anaqueles works!</p>
+<div class="animate-fade-in pb-4 h-100 d-flex flex-column">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="font-display fw-bold text-dark mb-1">Mapa de Anaqueles</h2>
+      <p class="text-muted mb-0">Gestiona los espacios físicos donde se ubican los productos.</p>
+    </div>
+    <button class="btn btn-primary d-flex align-items-center gap-2 px-3 fw-medium rounded-3" (click)="openAddModal()">
+      <i class="bi bi-plus-lg"></i> <span class="d-none d-sm-inline">Nuevo Anaquel</span>
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="flex-grow-1 d-flex justify-content-center align-items-center">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <div class="row g-4" *ngIf="!loading">
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3" *ngFor="let an of anaqueles">
+      <div class="card shadow-sm border-0 rounded-4 h-100 hover-card">
+        <div class="card-body p-4 text-center">
+          <div class="rounded-3 bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center mx-auto mb-3 text-dark border border" style="width: 60px; height: 60px;">
+            <i class="bi bi-bookshelf fs-2"></i>
+          </div>
+          <h5 class="text-dark fw-bold mb-1">{{ an.nombre }}</h5>
+          <div class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 mb-3">{{ an.codigo }}</div>
+          <p class="small text-muted mb-4 text-truncate">{{ an.descripcion || 'Sin descripción' }}</p>
+          
+          <button class="btn btn-outline-secondary btn-sm w-100 rounded-pill hover-bg-primary" (click)="openEditModal(an)">
+            <i class="bi bi-pencil me-2"></i> Editar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 text-center py-5" *ngIf="anaqueles.length === 0">
+      <i class="bi bi-bookshelf text-secondary opacity-50 mb-3 d-block" style="font-size: 4rem;"></i>
+      <h4 class="text-dark">Sin Anaqueles</h4>
+      <p class="text-muted">No has registrado ningún anaquel en esta tienda.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Formulario -->
+<ng-template #anaquelModal let-modal>
+  <div class="modal-content bg-white text-dark border border rounded-4 overflow-hidden shadow-lg">
+    <div class="modal-header border-bottom border bg-white bg-opacity-10 px-4 py-3">
+      <h5 class="modal-title font-display fw-bold">
+        <i class="bi" [ngClass]="isEditing ? 'bi-pencil-square text-primary' : 'bi-plus-square text-success'"></i>
+        {{ isEditing ? 'Editar Anaquel' : 'Nuevo Anaquel' }}
+      </h5>
+      <button type="button" class="btn-close btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body p-4">
+      <form [formGroup]="anaquelForm">
+        
+        <div class="mb-3">
+          <label class="form-label text-muted small text-uppercase tracking-wider fw-semibold">Código / Ubicación</label>
+          <input type="text" class="form-control bg-white border text-dark" formControlName="codigo" placeholder="Ej. A-01">
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label text-muted small text-uppercase tracking-wider fw-semibold">Nombre Descriptivo</label>
+          <input type="text" class="form-control bg-white border text-dark" formControlName="nombre" placeholder="Ej. Lácteos y Embutidos">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label text-muted small text-uppercase tracking-wider fw-semibold">Descripción (Opcional)</label>
+          <textarea class="form-control bg-white border text-dark" formControlName="descripcion" rows="2"></textarea>
+        </div>
+
+      </form>
+    </div>
+    <div class="modal-footer border-top border p-3">
+      <button type="button" class="btn btn-secondary rounded-pill px-4" (click)="modal.dismiss()">Cancelar</button>
+      <button type="button" class="btn btn-primary rounded-pill px-4" [disabled]="anaquelForm.invalid" (click)="saveAnaquel()">
+        {{ isEditing ? 'Guardar Cambios' : 'Registrar' }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+

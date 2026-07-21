@@ -1,17 +1,18 @@
-import {
-  ApplicationConfig,
-  provideBrowserGlobalErrorListeners,
-  importProvidersFrom,
-} from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { routes } from './app.routes';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
-    importProvidersFrom(NgbModule),
-  ],
+    provideZoneChangeDetection({ eventCoalescing: true }), 
+    provideRouter(routes), 
+    provideClientHydration(withEventReplay()),
+    provideHttpClient(withInterceptors([authInterceptor])),
+    importProvidersFrom(NgbModule)
+  ]
 };

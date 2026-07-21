@@ -1,1 +1,54 @@
-<p>alertas-stock works!</p>
+<div class="animate-fade-in pb-4 h-100 d-flex flex-column">
+  
+  <div class="mb-4">
+    <h2 class="font-display fw-bold text-dark mb-1"><i class="bi bi-exclamation-triangle text-danger me-2"></i>Centro de Alertas</h2>
+    <p class="text-muted mb-0">SKUs que requieren reposición inmediata para evitar quiebre de stock.</p>
+  </div>
+
+  <div *ngIf="loading" class="flex-grow-1 d-flex justify-content-center align-items-center">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <div class="row g-4" *ngIf="!loading">
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3" *ngFor="let alerta of alertas">
+      <div class="card shadow-sm border-0 rounded-4 h-100 position-relative overflow-hidden hover-card"
+           [ngClass]="{'border-bottom border-3 border-danger': getEstado(alerta.stock_actual, alerta.stock_minimo) === 'empty' || getEstado(alerta.stock_actual, alerta.stock_minimo) === 'critical',
+                       'border-bottom border-3 border-warning': getEstado(alerta.stock_actual, alerta.stock_minimo) === 'low'}">
+        
+        <div class="card-body p-4 d-flex flex-column text-center">
+          <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" 
+               [ngClass]="{'bg-danger bg-opacity-25 text-danger': getEstado(alerta.stock_actual, alerta.stock_minimo) === 'empty' || getEstado(alerta.stock_actual, alerta.stock_minimo) === 'critical',
+                           'bg-warning bg-opacity-25 text-warning': getEstado(alerta.stock_actual, alerta.stock_minimo) === 'low'}"
+               style="width: 56px; height: 56px;">
+            <i class="bi bi-box-seam fs-3"></i>
+          </div>
+          
+          <h6 class="text-dark fw-bold mb-1">{{ alerta.nombre }}</h6>
+          <div class="small text-muted font-monospace mb-3">{{ alerta.codigo }}</div>
+          
+          <div class="mt-auto p-3 bg-white bg-opacity-10 rounded-3 border border">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="small text-muted">Stock Actual:</span>
+              <span class="fw-bold fs-5" 
+                    [ngClass]="{'text-danger': getEstado(alerta.stock_actual, alerta.stock_minimo) === 'empty' || getEstado(alerta.stock_actual, alerta.stock_minimo) === 'critical',
+                                'text-warning': getEstado(alerta.stock_actual, alerta.stock_minimo) === 'low'}">
+                {{ alerta.stock_actual }}
+              </span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="small text-muted">Stock Mínimo:</span>
+              <span class="text-dark fw-medium">{{ alerta.stock_minimo }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 text-center py-5" *ngIf="alertas.length === 0">
+      <i class="bi bi-shield-check text-success mb-3 d-block" style="font-size: 4rem;"></i>
+      <h4 class="text-dark">Inventario Saludable</h4>
+      <p class="text-muted">No hay alertas de stock en este momento.</p>
+    </div>
+  </div>
+</div>
+

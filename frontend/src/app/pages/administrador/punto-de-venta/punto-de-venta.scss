@@ -1,0 +1,25 @@
+.product-card {
+  transition: transform 0.15s ease-out, border-color 0.15s;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary) !important;
+    background-color: var(--card-hover);
+  }
+}
+
+.title-truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+  height: 2.5em; /* Fallback for 2 lines */
+}
+
+/* Scrollbar específico para el carrito */
+ul.list-group {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+}
