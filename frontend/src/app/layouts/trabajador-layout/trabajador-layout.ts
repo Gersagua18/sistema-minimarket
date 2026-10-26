@@ -4,12 +4,12 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { AuthService } from '../../core/services/auth.service';
 import { TiendasService } from '../../core/services/tiendas.service';
 import { Tienda } from '../../core/models/tienda.model';
-import { BrandLogoComponent } from '../../shared/components/brand-logo/brand-logo.component';
+
 
 @Component({
   selector: 'app-trabajador-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, BrandLogoComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './trabajador-layout.html',
   styleUrl: './trabajador-layout.scss'
 })
